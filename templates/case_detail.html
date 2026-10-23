@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ case.reference_number }} · KYC Case Manager{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">{{ case.reference_number }}</p><h1>{{ case.customer_name }}</h1><p class="muted">Created {{ case.created_at.strftime('%d %b %Y, %H:%M') }} by {{ case.creator.username }}</p></div><span class="status large {{ case.status|lower }}">{{ case.status }}</span></div>
+<div class="detail-grid">
+<section class="panel"><h2>Case details</h2><dl>
+<dt>Customer email</dt><dd>{{ case.customer_email }}</dd>
+<dt>Document type</dt><dd>{{ case.document_type }}</dd>
+<dt>Reference</dt><dd>{{ case.reference_number }}</dd>
+<dt>Follow-up due</dt><dd>{{ case.due_date.strftime('%d %b %Y') }}{% if case.status == 'Pending' and case.due_date < today %} <span class="overdue-label">Overdue</span>{% endif %}</dd>
+<dt>Reviewer</dt><dd>{{ case.reviewer.username if case.reviewer else 'Not reviewed' }}</dd>
+<dt>Notes</dt><dd>{{ case.notes or '—' }}</dd>
+<dt>Document</dt><dd>{% if case.document_filename %}<a href="{{ url_for('download_document', case_id=case.id) }}">Download uploaded file</a>{% else %}No file attached{% endif %}</dd>
+</dl></section>
+{% if case.status == 'Pending' and current_user.role in ['admin','reviewer'] %}
+<section class="panel"><h2>Review case</h2><p class="muted">Choose a decision and add review notes.</p><form method="post" action="{{ url_for('review_case', case_id=case.id) }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<label>Review notes<textarea name="notes" rows="4" placeholder="Explain the decision or missing information…"></textarea></label>
+<div class="actions"><button class="button success" name="status" value="Approved" type="submit">Approve</button><button class="button danger" name="status" value="Rejected" type="submit">Reject</button></div>
+</form></section>
+{% endif %}
+</div>
+<section class="panel"><h2>Audit history</h2>{% if logs %}<div class="table-wrap"><table><thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Details</th></tr></thead><tbody>{% for log in logs %}<tr><td>{{ log.created_at.strftime('%d %b %Y %H:%M') }}</td><td>{{ log.actor.username }}</td><td>{{ log.action }}</td><td>{{ log.details }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="muted">No case-specific activity yet.</p>{% endif %}</section>
+{% endblock %}

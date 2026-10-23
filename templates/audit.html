@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Audit log · KYC Case Manager{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">ADMIN</p><h1>Audit log</h1><p class="muted">Latest 200 recorded actions.</p></div></div>
+<section class="panel"><div class="table-wrap"><table><thead><tr><th>When</th><th>Actor</th><th>Case</th><th>Action</th><th>Details</th></tr></thead><tbody>
+{% for log in logs %}<tr><td>{{ log.created_at.strftime('%d %b %Y %H:%M:%S') }}</td><td>{{ log.actor.username }}</td><td>{% if log.case %}<a href="{{ url_for('case_detail', case_id=log.case.id) }}">{{ log.case.reference_number }}</a>{% else %}—{% endif %}</td><td>{{ log.action }}</td><td>{{ log.details }}</td></tr>{% else %}<tr><td colspan="5" class="empty">No activity recorded yet.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

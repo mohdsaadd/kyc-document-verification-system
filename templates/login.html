@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Login · KYC Case Manager{% endblock %}
+{% block content %}
+<section class="login-card">
+  <p class="eyebrow">WORKFLOW DEMO</p>
+  <h1>Sign in</h1>
+  <p class="muted">Access the KYC verification workspace.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Username<input name="username" required autocomplete="username"></label>
+    <label>Password<input type="password" name="password" required autocomplete="current-password"></label>
+    <button type="submit" class="primary full">Sign in</button>
+  </form>
+  <p class="small muted">Demo accounts are created with <code>flask --app app init-db</code>.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Follow-ups · KYC Case Manager{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">WORK QUEUE</p><h1>Pending follow-ups</h1><p class="muted">Review pending cases before their due dates.</p></div></div>
+<section class="panel"><div class="table-wrap"><table><thead><tr><th>Reference</th><th>Customer</th><th>Due date</th><th>Queue status</th><th>Action</th></tr></thead><tbody>
+{% for case in cases %}<tr><td>{{ case.reference_number }}</td><td>{{ case.customer_name }}</td><td>{{ case.due_date.strftime('%d %b %Y') }}</td><td>{% if case.due_date < today %}<span class="status rejected">Overdue</span>{% elif case.due_date == today %}<span class="status pending">Due today</span>{% else %}<span class="status pending">Upcoming</span>{% endif %}</td><td><a href="{{ url_for('case_detail', case_id=case.id) }}">Open case</a></td></tr>{% else %}<tr><td colspan="5" class="empty">No pending cases. Nice work.</td></tr>{% endfor %}
+</tbody></table></div></section>
+<p class="help">This MVP displays follow-up work in the app. It does not send email or SMS notifications yet.</p>
+{% endblock %}

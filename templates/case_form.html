@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}New case · KYC Case Manager{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">CASE INTAKE</p><h1>Create a KYC case</h1><p class="muted">Use fictional customer details and a dummy document.</p></div></div>
+<section class="panel form-panel"><form method="post" enctype="multipart/form-data">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<div class="form-grid">
+<label>Customer name *<input name="customer_name" maxlength="120" required></label>
+<label>Customer email *<input type="email" name="customer_email" maxlength="160" required></label>
+<label>Document type *<select name="document_type" required><option value="">Choose…</option><option>Passport</option><option>National ID</option><option>Proof of address</option><option>Driving licence</option><option>Other</option></select></label>
+<label>Follow-up due date<input type="date" name="due_date"></label>
+<label class="wide">Notes<textarea name="notes" rows="3" placeholder="Add a short case note…"></textarea></label>
+<label class="wide">Document file (optional)<input type="file" name="document" accept=".pdf,.png,.jpg,.jpeg"><span class="help">PDF, PNG, JPG or JPEG; maximum 5 MB.</span></label>
+</div>
+<div class="actions"><button class="button primary" type="submit">Create case</button><a class="button secondary" href="{{ url_for('cases') }}">Cancel</a></div>
+</form></section>
+{% endblock %}
